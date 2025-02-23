@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Calculator</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #fff;
+        }
+        .container {
+            background: #fff;
+            color: #333;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 400px;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, button {
+            width: 100%;
+            margin-bottom: 15px;
+            padding: 12px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        input {
+            background: #f0f0f0;
+        }
+        button {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: #fff;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+        }
+        .result {
+            font-size: 20px;
+            margin-top: 20px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1> Age Calculator</h1>
+        <label for="birthDate">Select Your Date of Birth:</label>
+        <input type="date" id="birthDate" required>
+        <label for="currentDate">Select Current Date:</label>
+        <input type="date" id="currentDate" required>
+        <button onclick="calculateAge()">Calculate Age</button>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        // Automatically set the current date in the input field when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentDateInput = document.getElementById('currentDate');
+            currentDateInput.value = new Date().toISOString().split('T')[0];
+        });
+
+        function calculateAge() {
+            const birthDateInput = document.getElementById('birthDate').value;
+            const currentDateInput = document.getElementById('currentDate').value;
+
+            if (!birthDateInput || !currentDateInput) {
+                document.getElementById('result').textContent = "Please select both dates.";
+                return;
+            }
+
+            const birthDate = new Date(birthDateInput);
+            const currentDate = new Date(currentDateInput);
+
+            if (currentDate < birthDate) {
+                document.getElementById('result').textContent = "Current date must be after birth date.";
+                return;
+            }
+
+            let age = currentDate.getFullYear() - birthDate.getFullYear();
+            const monthDiff = currentDate.getMonth() - birthDate.getMonth();
+            const dayDiff = currentDate.getDate() - birthDate.getDate();
+
+            if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+                age--;
+            }
+
+            const months = monthDiff < 0 ? 12 + monthDiff : monthDiff;
+            const days = dayDiff < 0 
+                ? new Date(currentDate.getFullYear(), currentDate.getMonth(), 0).getDate() + dayDiff 
+                : dayDiff;
+
+            document.getElementById('result').textContent = 
+                `You are ${age} years, ${months} months, and ${days} days old.`;
+        }
+    </script>
+</body>
+</html>
